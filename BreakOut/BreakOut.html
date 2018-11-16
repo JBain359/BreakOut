@@ -1,0 +1,225 @@
+<!-- WOW! I cannot belive I did all of this within one day; especially since i got waaaay less help from the internet than I did with Defense. This probably still isnt "code efficient" or whatever but still its amazing, I made the game BreakOut on 07/08/15. I'll probably put more things into this program like a level maker,which will be really cool.
+also To the Future Joe Bain out there, You did a Great Job with this and I hope that you've kept it up!-->
+<!doctype html>
+<html>
+<head>
+<style>
+    body{background: beige}
+    #Arena{margin: auto; background: #fff; border-color: #999; border-style:solid}
+    #replay{visibility: hidden; }
+    #other{display:inline-block; font-family: sans-serif; }
+    #score{margin: auto; font-family: sans-serif;color: #333}
+    /*#status{margin-bottom: 380px}
+</style>
+<script>
+    function Play(){
+        var ctx = document.getElementById('Arena').getContext('2d')
+            var cW = ctx.canvas.width
+            var cH = ctx.canvas.height
+            
+        var createEnable = false
+        document.addEventListener('mousedown', function(event){
+            var mX = event.clientX - ctx.canvas.offsetLeft
+            var mY = event.clientY - ctx.canvas.offsetTop
+            if(blocks.length === 0){
+                createEnable = true
+            }
+            if(createEnable === true){
+                blocks.push({"x":(mX-50)-(mX%5),"y":(mY-25)-(mY%5),"w":100,"h":50,"bg":"gray"})
+            }
+        })
+        
+        var score = 0
+        var multiplier=0
+        var endScore = ""
+        //Blocks
+        var blocks = [{"x":100,"y":0,"w":100,"h":50,"bg":"rgba(100,45,129,1)"},
+                      {"x":200,"y":0,"w":100,"h":50,"bg":"rgba(75,160,82,1)"},
+                      {"x":300,"y":0,"w":100,"h":50,"bg":"rgba(230,100,32,1)"},
+                      {"x":400,"y":0,"w":100,"h":50,"bg":"rgba(24,145,229,1)"},
+                      {"x":500,"y":0,"w":100,"h":50,"bg":"rgba(200,45,45,1)"},
+                      {"x":150,"y":50,"w":100,"h":50,"bg":"rgba(100,100,199,1)"},
+                      {"x":250,"y":50,"w":100,"h":50,"bg":"rgba(250,120,120,1)"},
+                      {"x":350,"y":50,"w":100,"h":50,"bg":"rgba(90,240,129,1)"},
+                      {"x":450,"y":50,"w":100,"h":50,"bg":"rgba(100,240,240,1)"},
+                      {"x":200,"y":100,"w":100,"h":50,"bg":"pink"},
+                      {"x":300,"y":100,"w":100,"h":50,"bg":"red"},
+                      {"x":400,"y":100,"w":100,"h":50,"bg":"yellow"},
+                      {"x":300,"y":150,"w":100,"h":50,"bg":"#294"},
+                      {"x":200,"y":200,"w":100,"h":50,"bg":"#956"},
+                      {"x":300,"y":200,"w":100,"h":50,"bg":"#249"},
+                      {"x":400,"y":200,"w":100,"h":50,"bg":"#8a2"},
+                      {"x":150,"y":250,"w":100,"h":50,"bg":"#1ac"},
+                      {"x":450,"y":250,"w":100,"h":50,"bg":"rgba(209,38,19,1)"},
+                      {"x":400,"y":300,"w":100,"h":50,"bg":"rgba(3,207,150,1)"},
+                      {"x":300,"y":300,"w":100,"h":50,"bg":"rgba(209,100,199,1)"},
+                      {"x":200,"y":300,"w":100,"h":50,"bg":"rgba(250,180,0,1)"},
+                      ]
+        function renderBlocks(){
+            for(var i = 0; i<blocks.length;i++){
+                var bl = blocks[i]
+                ctx.fillStyle = bl.bg
+                ctx.fillRect(bl.x,bl.y,bl.w,bl.h)
+            }
+        }
+        //Ball
+        function Ball(){
+            this.x=cW/2, this.y=cH/2, this.r =5,this.sa = 0, this.ea =Math.PI*2,this.clock=false, this.bg = "blue"
+            this.render = function(){
+                ctx.fillStyle= this.bg
+                ctx.beginPath()
+                ctx.arc(this.x+=directionX,this.y+=directionY,this.r,this.sa,this.ea,this.clock)
+                ctx.fill()
+                if(this.y>cH){
+                    document.getElementById('status').innerHTML = "YOU LOSE!!"
+                    ctx.font ="600 20px sans-serif"
+                    ctx.fillText("GAME OVER",cW/2-60,cH/2,200)
+                    document.getElementById('replay').style.visibility = "visible"
+                }
+                
+            }
+        }
+        var dot = new Ball()
+        var directionY =5
+        var directionX =Math.random()*10
+        
+        function Pcollision(){
+                    if(dot.x+dot.r >= stert.x && dot.x-dot.r <=stert.x+stert.w && dot.y+dot.r >=stert.y && dot.y-dot.r<=stert.y+stert.h-25){
+                             directionY = -5
+                             multiplier =1
+                             if(dot.x > stert.x+stert.w/2){
+                                 if(directionX<0){
+                                    directionX = directionX+(dot.x- (stert.x+stert.w/2))/20
+                                 }else if(directionX>=0){
+                                    directionX = directionX+(dot.x- (stert.x+stert.w/2))/20
+                                 }
+                             }else if(dot.x <= stert.x+stert.w/2){
+                                 if(directionX < 0){
+                                    directionX = directionX -((stert.x+stert.w/2) -dot.x)/20
+                                 }else if(directionX >= 0){
+                                        directionX = directionX -((stert.x+stert.w/2) -dot.x)/20
+                                 }
+                             }
+        
+                        
+
+                    }
+        }
+    
+        
+        function Bcollision(){
+            for(var j = 0; j<blocks.length;j++){
+                var blo = blocks[j]
+                if(dot.x+dot.r >= blo.x && dot.x-dot.r <=blo.x+blo.w && dot.y+dot.r >=blo.y && dot.y-dot.r<=blo.y+blo.h){
+                        blocks.splice(j,1)
+                        multiplier= multiplier+1
+                        score = score+(50*multiplier)
+                        document.getElementById('score').innerHTML = "SCORE: "+ score+ " |======| " + "END SCORE: " + endScore
+                        if(dot.y+dot.r === blo.y || dot.y-dot.r === blo.y+blo.h){ //up
+                            directionY = directionY*-1
+                            directionX = directionX*-1
+                            
+                        }
+                        if((dot.x+dot.r === blo.x+3 || blo.x-3) || (dot.x-dot.r === blo.x+blo.w+3||blo.x+blo.w+3)){ //across
+                            //directionY = directionY*-1
+                            directionX = directionX*-1
+                            
+                        } 
+
+                }
+
+            }
+        }
+        
+        function winCheck(){
+            if(blocks.length === 0 && createEnable === false){
+                endScore = score
+                document.getElementById('status').innerHTML = "YOU WIN!!"
+                document.getElementById('replay').style.visibility = "visible"
+                document.getElementById('score').innerHTML = "SCORE: "+ score+ " |======| " + "END SCORE: " + endScore
+            }
+        }
+        
+        //Canvas Boundaries
+        
+        function ballCheck(){
+            if(dot.x-dot.r< 0 || dot.x+dot.r>cW){
+                directionX=directionX*-1
+            }
+            if(dot.y-dot.r< 0){
+                directionY=directionY*-1
+            }
+            
+        
+        }
+        
+        function boundCheck(){
+            if(stert.x <0){
+                stert.x = 0
+            }else if(stert.x+stert.w > cW){
+                stert.x = cW-stert.w
+            }
+            
+        }
+        
+        //Player
+        
+        
+        
+        function player(){
+            this.x =cW/2-75, this.y=750, this.w = 150, this.h = 25, this.bg = "gray", this.dir
+            this.render = function(){
+                ctx.fillStyle = this.bg
+                ctx.fillRect(this.x,this.y,this.w,this.h)
+                ctx.fillRect(this.x,this.y,this.w,this.h)
+                if(this.dir === "right"){this.x+=10}
+                else if(this.dir === "left"){this.x-=10}
+            }
+        }
+        var stert = new player()
+        
+        
+        //animation
+        function animate(){
+            ctx.save()
+            ctx.clearRect(0,0,cW,cH)
+            
+            stert.render()
+            renderBlocks()
+            boundCheck()
+            ballCheck()
+            dot.render()
+            Pcollision()
+            Bcollision()
+            winCheck()
+            
+            ctx.restore()
+        }
+        var animateInt = setInterval(animate,30)
+        
+        //Controls
+        document.addEventListener('keydown', function(event){
+            var key = String.fromCharCode(event.keyCode)
+            if(key === 'D'){stert.dir = "right"}
+            else if(key === 'A'){stert.dir = "left"}
+        
+        })
+        document.addEventListener('keyup', function(event){
+            var key = String.fromCharCode(event.keyCode)
+                if(key === 'D' || 'A' ){stert.dir = ""}
+        })
+    }
+    window.addEventListener('load', function(event){
+        Play()
+    })
+</script>
+</head>
+<body>
+    <h3 id = "score">SCORE: 0 |======| END SCORE: </h3>
+    <canvas id="Arena" width="700" height="800"></canvas>
+    <div id="other" >
+    <h2 id= "status"></h2>
+    <button id="replay" onclick="location.reload()">Play Again</button>
+    </div>
+</body>    
+</html>
